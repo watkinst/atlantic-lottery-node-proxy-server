@@ -169,4 +169,10 @@ app.use((req, res, next) => {
   next()
 })
 
+app.use((req, res) => {
+  const error = new Error('Invalid endpoint!')
+  res.statusCode = 404;
+  res.send(error.message)
+})
+
 app.listen(port, () => console.log(`http://localhost:${port}`))
