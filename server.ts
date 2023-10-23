@@ -134,10 +134,14 @@ app.get('/draw/:game/:date', async (req, res, next) => {
 })
 
 app.get('/draws/:game/:count', async (req, res, next) => {
-  const game = req.params.game
-  const count = +req.params.count
-
   try {
+    const game = req.params.game
+    const count = +req.params.count
+
+    if (!validGames.includes(game)) throw new Error(`Invalid game! Please use one of: ${validGames.join(', ')}.`)
+
+    if (!Number.isInteger(count)) throw new Error('Invalid draw count! Please use an integer value.')
+
     const drawDates = await getFormattedDrawDates(game)
 
     if (drawDates.length < count) throw new Error(`Invalid draw count! There are ${drawDates.length} ${game} draws available.`)
