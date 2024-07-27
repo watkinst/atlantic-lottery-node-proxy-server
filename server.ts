@@ -9,23 +9,23 @@ const port = 3001
 const urlBase = 'https://dsc.alc.ca/api/winning_numbers'
 const validGames = ['HitorMiss', 'DailyGrand', 'Lotto4', 'PokerLotto', 'ShaBam', 'Pik4', 'SalsaBingo', 'LottoMax', 'Lotto649', 'KenoAtlantic', 'Bucko', 'Atlantic49']
 
-class ApiError extends Error{
-  statusCode: number;
+class ApiError extends Error {
+  statusCode: number
 
   constructor(statusCode: number, message: string) {
-    super(message);
+    super(message)
 
-    Object.setPrototypeOf(this, new.target.prototype);
-    this.name = Error.name;
-    this.statusCode = statusCode;
-    Error.captureStackTrace(this);
+    Object.setPrototypeOf(this, new.target.prototype)
+    this.name = Error.name
+    this.statusCode = statusCode
+    Error.captureStackTrace(this)
   }
 }
 
 /**
  * Converts Atlantic Lottery API date format to ISO String
- * @param date Atlantic Lottery API date string with format '/Date(1622255399000-0300)/'
- * @returns {string} An ISO formatted date string 'YYY-MM-DDT00:00:00.000Z '
+ * @param {string} date Atlantic Lottery API date string with format '/Date(1622255399000-0300)/'
+ * @returns {string} An ISO formatted date string 'YYY-MM-DDT00:00:00.000Z'
  */
 const getDateAsISOString = (date: string): string => {
   const msAndOffsetStrings = date.match(/\d+/g)
@@ -121,7 +121,7 @@ app.get('/draw/:game/:date', async (req, res, next) => {
 
     const drawDates = await getFormattedDrawDates(game)
 
-    if(!drawDates.includes(date)) throw new Error(`Invalid date! Please use one of: ${drawDates.join(', ')}`)
+    if (!drawDates.includes(date)) throw new Error(`Invalid date! Please use one of: ${drawDates.join(', ')}`)
 
     const drawData = await axios.get<IDrawData[]>(`${urlBase}/draw/${game}/${date}`).then(({ data }) => {
       return data.map(draw => getFormattedDrawData(draw))[0]
@@ -171,7 +171,7 @@ app.use((req, res, next) => {
 
 app.use((req, res) => {
   const error = new Error('Invalid endpoint!')
-  res.statusCode = 404;
+  res.statusCode = 404
   res.send(error.message)
 })
 
